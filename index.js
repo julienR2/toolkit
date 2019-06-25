@@ -5,6 +5,7 @@ const inquirerAutocomplete = require('inquirer-autocomplete-prompt')
 const chalk = require('chalk')
 const fuzzy = require('fuzzy')
 const { spawn } = require('child_process')
+const orderBy = require('lodash/orderBy')
 
 const commands = require('./commands')
 
@@ -19,15 +20,20 @@ const fuzziOptions = {
   extract: getsearchString,
 }
 
-const formatResults = ({ original: result }) => ({
+const formatResults = ({ original: result, score }) => ({
+  ...result,
   name: getsearchString(result),
   value: result.command,
-  description: result.description,
+  score,
 })
 
 const fuzzySearch = (input = '') => {
   const rawResults = fuzzy.filter(input, commands, fuzziOptions)
-  const results = rawResults.map(formatResults)
+  const results = orderBy(
+    rawResults.map(formatResults),
+    ['score', 'count'],
+    ['desc', 'desc']
+  )
 
   return Promise.resolve(results)
 }
