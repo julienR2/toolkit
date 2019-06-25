@@ -1,54 +1,30 @@
 #!/usr/bin/env node
 
-const inquirer = require('inquirer')
-const inquirerAutocomplete = require('inquirer-autocomplete-prompt')
-const chalk = require('chalk')
-const fuzzy = require('fuzzy')
-const { spawn } = require('child_process')
-const orderBy = require('lodash/orderBy')
+const parseArgs = require('minimist')
 
-const commands = require('./commands')
+const store = require('./src/store')
+const cliCommands = require('./src/commands')
 
-inquirer.registerPrompt('autocomplete', inquirerAutocomplete)
+const { runCommand } = require('./src/utils')
 
-const getsearchString = ({ name, command, description }) =>
-  `${name} | ${description ? chalk.italic(description) + ' | ' : ''}${chalk.dim(
-    command
-  )}`
+const shortcuts = store.get('shortcuts').reduce(
+  (acc, { command, name }) => ({
+    ...acc,
+    [name.toLowerCase()]: () => runCommand(command),
+  }),
+  {}
+)
 
-const fuzziOptions = {
-  extract: getsearchString,
+const commands = { ...shortcuts, ...cliCommands }
+
+let {
+  _: [command = 'run'],
+} = parseArgs(process.argv.slice(2))
+
+command = command.toLowerCase()
+
+if (commands[command]) {
+  commands[command]()
+} else {
+  console.log('No command find')
 }
-
-const formatResults = ({ original: result, score }) => ({
-  ...result,
-  name: getsearchString(result),
-  value: result.command,
-  score,
-})
-
-const fuzzySearch = (input = '') => {
-  const rawResults = fuzzy.filter(input, commands, fuzziOptions)
-  const results = orderBy(
-    rawResults.map(formatResults),
-    ['score', 'count'],
-    ['desc', 'desc']
-  )
-
-  return Promise.resolve(results)
-}
-
-inquirer
-  .prompt([
-    {
-      type: 'autocomplete',
-      name: 'rawCommand',
-      message: 'Which command do you want to run ?',
-      source: (_, input) => fuzzySearch(input),
-    },
-  ])
-  .then(({ rawCommand }) => {
-    const [command, ...args] = rawCommand.split(' ')
-
-    return spawn(command, args, { stdio: 'inherit' })
-  })
