@@ -210,6 +210,11 @@ mute-stream@0.0.7:
   resolved "https://registry.npmjs.org/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
   integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
+omelette@^0.4.12:
+  version "0.4.12"
+  resolved "https://registry.npmjs.org/omelette/-/omelette-0.4.12.tgz#83d6413ac2f34b00266a0956b8bc472deeca1c9f"
+  integrity sha512-f/GsNOZIxHnNo9hHguQ8bNWXogfTebmvXR5Jg1apRakWO/PDSUbCOFlp9Rv4IPnS59sjZTPqkHZ2seFx8opJXA==
+
 onetime@^2.0.0:
   version "2.0.1"
   resolved "https://registry.npmjs.org/onetime/-/onetime-2.0.1.tgz#067428230fd67443b2794b22bba528b6867962d4"
