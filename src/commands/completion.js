@@ -2,9 +2,9 @@ const fs = require('fs')
 const os = require('os')
 const { spawn } = require('child_process')
 
-const toolkitCompletion = fs.readFileSync('./toolkit.completion.sh', 'utf8')
+const completion = () => {
+  const toolkitCompletion = fs.readFileSync('./toolkit.completion.sh', 'utf8')
 
-const completion = () =>
   fs.appendFile(
     `${os.homedir()}/.bash_profile`,
     `\n\n${toolkitCompletion}`,
@@ -14,5 +14,5 @@ const completion = () =>
       console.log('Completion installed !')
     }
   )
-
+}
 module.exports = completion

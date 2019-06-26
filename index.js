@@ -1,39 +1,19 @@
 #!/usr/bin/env node
 
-const omelette = require('omelette')
 const parseArgs = require('minimist')
+const shortcuts = require('./src/utils/getShortcuts')
+const setupCompletion = require('./src/utils/setupCompletion')
 
-const store = require('./src/store')
-const cliCommands = require('./src/commands')
-
-const { runCommand } = require('./src/utils')
-
-omelette('toolkit|tk <command>').init()
-
-const shortcuts = store.get('shortcuts').reduce(
-  (acc, { command, name }) => ({
-    ...acc,
-    [name.toLowerCase()]: () => runCommand(command),
-  }),
-  {}
-)
-
-const commands = { ...shortcuts, ...cliCommands }
-
-console.log('commands', commands)
-
-completion.on('toolkit|tk', ({ reply }) => {
-  reply(['fatih', 'rotimi'])
-})
+setupCompletion()
 
 let {
-  _: [command = 'run'],
-} = parseArgs(process.argv.slice(2))
+  _: [shortcut = 'run', ...args],
+} = parseArgs(process.argv.slice(2), { stopEarly: true })
 
-command = command.toLowerCase()
+shortcut = shortcut.toLowerCase()
 
-if (commands[command]) {
-  commands[command]()
+if (shortcuts[shortcut]) {
+  shortcuts[shortcut](args, shortcuts)
 } else {
-  console.log('No command find')
+  console.log('No shortcut find')
 }
