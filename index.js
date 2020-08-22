@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 
-const parseArgs = require('minimist')
-const shortcuts = require('./src/utils/getShortcuts')
-const setupCompletion = require('./src/utils/setupCompletion')
+const parseArgs = require("minimist");
+const shortcuts = require("./src/utils/getShortcuts");
+const completion = require("./src/completion/init");
 
-setupCompletion()
+completion();
 
 let {
-  _: [shortcut = 'run', ...args],
-} = parseArgs(process.argv.slice(2), { stopEarly: true })
+  _: [shortcut = "run", ...args],
+} = parseArgs(process.argv.slice(2), { stopEarly: true });
 
-shortcut = shortcut.toLowerCase()
+shortcut = shortcut.toLowerCase();
 
 if (shortcuts[shortcut]) {
-  shortcuts[shortcut](args, shortcuts)
+  shortcuts[shortcut](args, shortcuts);
 } else {
-  console.log('No shortcut find')
+  console.log("No shortcut found");
 }
