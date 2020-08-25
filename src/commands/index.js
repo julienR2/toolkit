@@ -1,8 +1,9 @@
-const add = require("./add");
-const run = require("./run");
-const remove = require("./remove");
-const edit = require("./edit");
-const sync = require("./sync");
+const add = require("./add")
+const run = require("./run")
+const remove = require("./remove")
+const edit = require("./edit")
+const sync = require("./sync")
+const plugins = require("./plugins")
 
 module.exports = {
   add,
@@ -11,4 +12,5 @@ module.exports = {
   remove,
   edit,
   sync,
-};
+  plugins,
+}

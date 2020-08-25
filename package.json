@@ -1,25 +1,29 @@
 {
   "name": "@julienr2/toolkit",
-  "version": "1.1.1",
+  "version": "1.2.2",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "postinstall": "node src/completion/setup.js",
-    "preuninstall": "node src/completion/clean.js"
+    "uninstall": "node src/completion/clean.js"
   },
   "bin": {
     "toolkit": "./index.js",
     "tk": "./index.js"
   },
   "dependencies": {
-    "chalk": "^2.4.2",
+    "chalk": "^4.1.0",
     "configstore": "^5.0.0",
     "fuzzy": "^0.1.3",
-    "inquirer": "^6.5.0",
+    "glob": "^7.1.6",
+    "inquirer": "^7.3.3",
     "inquirer-autocomplete-prompt": "^1.0.1",
     "lodash": "^4.17.15",
-    "minimist": "^1.2.0",
-    "octonode": "^0.9.5",
-    "omelette": "^0.4.12"
+    "minimist": "^1.2.5",
+    "octonode": "^0.10.0",
+    "omelette": "^0.4.15-1"
+  },
+  "devDependencies": {
+    "cowsay": "^1.4.0"
   }
 }

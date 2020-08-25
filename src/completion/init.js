@@ -1,14 +1,24 @@
-const omelette = require("omelette");
-const map = require("lodash/map");
+const omelette = require("omelette")
+const glob = require("glob")
 
-const commands = require("../utils/getShortcuts");
+const commands = require("../utils/getShortcuts")
+const { PLUGINS } = require("../commands/constants")
+
+const completionTree = Object.keys(commands).reduce((acc, key) => {
+  if (key !== "plugins") {
+    return { ...acc, [key]: true }
+  }
+
+  return {
+    ...acc,
+    plugins: PLUGINS,
+  }
+}, {})
 
 module.exports = () => {
-  const compl = omelette("toolkit|tk <command>");
+  const compl = omelette("toolkit|tk <command>")
 
-  compl.on("command", ({ reply }) => reply(map(commands, (fn, key) => key)));
+  compl.tree(completionTree).init()
 
-  compl.init();
-
-  return compl;
-};
+  return compl
+}

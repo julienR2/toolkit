@@ -1,10 +1,32 @@
-const fs = require("fs");
-const os = require("os");
+const fs = require('fs')
+const path = require('path')
 
-const completion = require("./init");
-const runCommand = require("../utils/runCommand");
+const initCompletion = require('./init')
 
-completion().setupShellInitFile();
+const completion = initCompletion()
+const programFolder = path.join(completion.HOME, `.${completion.program}`)
 
-const bashProfile = `${os.homedir()}/.bash_profile`;
-const bashRc = `${os.homedir()}/.bashrc`;
+const completionPath = path.join(programFolder, 'completion.sh')
+const initFile = completion.getDefaultShellInitFile()
+
+// Completion bash
+if (!fs.existsSync(programFolder)) {
+  fs.mkdirSync(programFolder)
+}
+fs.writeFileSync(completionPath, completion.generateCompletionCode())
+
+// For every shell, write completion block to the init file
+fs.appendFileSync(
+  initFile,
+  `
+export PATH="$PATH:$(yarn global bin)"
+
+${completion.getCompletionBlock()}
+`,
+)
+
+console.log(
+  `✨ Completion setup ! Now restart your terminal or run 'source ${initFile}'`,
+)
+
+return process.exit()
