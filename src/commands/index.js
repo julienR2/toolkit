@@ -7,6 +7,7 @@ const sync = require("./sync");
 module.exports = {
   add,
   run,
+  list: run,
   remove,
   edit,
   sync,
