@@ -1,73 +1,73 @@
-const fs = require("fs").promises
-const { existsSync } = require("fs")
-const path = require("path")
-const inquirer = require("inquirer")
-const github = require("octonode")
-const glob = require("glob")
+const fs = require('fs').promises
+const { existsSync } = require('fs')
+const path = require('path')
+const inquirer = require('inquirer')
+const github = require('octonode')
+const glob = require('glob')
 
-const store = require("../store")
-const { PLUGINS_FOLDER } = require("./constants")
+const store = require('../store')
+const { PLUGINS_FOLDER } = require('./constants')
 
 const AUTH_TYPES = {
-  credential: "👤 Username/Password",
-  token: "🔑 Token",
+  credential: '👤 Username/Password',
+  token: '🔑 Token',
 }
 const ACTION_TYPES = {
-  upload: "⬆️ Upload",
-  download: "⬇️ Download (⚠️ Your current shortcuts will be overrided)",
-  change_gist: "♻️ Change gist",
+  upload: '⬆️ Upload',
+  download: '⬇️ Download (⚠️ Your current shortcuts will be overrided)',
+  change_gist: '♻️ Change gist',
 }
 const NEW_GIST = {
-  name: "✨ Create a new Gist",
+  name: '✨ Create a new Gist',
   value: null,
 }
-const GIST_NAME = "@toolkit_backup"
-const SHORTCUTS_FILE = "shortcuts.json"
+const GIST_NAME = '@toolkit_backup'
+const SHORTCUTS_FILE = 'shortcuts.json'
 
 const authenticate = async () => {
-  const { token, username } = store.get("gist")
+  const { token, username } = store.get('gist')
 
   if (token || username) return Promise.resolve()
 
   return inquirer
     .prompt([
       {
-        type: "list",
-        name: "authType",
-        message: "How do you want to auhtenticate to github ?",
+        type: 'list',
+        name: 'authType',
+        message: 'How do you want to auhtenticate to github ?',
         choices: [AUTH_TYPES.credential, AUTH_TYPES.token],
       },
     ])
     .then(({ authType }) => {
       let questions = [
         {
-          type: "input",
-          name: "token",
-          message: "Github personal access token (with gist scope)",
+          type: 'input',
+          name: 'token',
+          message: 'Github personal access token (with gist scope)',
         },
       ]
 
       if (authType === AUTH_TYPES.credential) {
         questions = [
           {
-            type: "input",
-            name: "username",
-            message: "Username",
+            type: 'input',
+            name: 'username',
+            message: 'Username',
           },
           {
-            type: "input",
-            name: "password",
-            message: "Password",
+            type: 'input',
+            name: 'password',
+            message: 'Password',
           },
         ]
       }
 
-      return inquirer.prompt(questions).then((auth) => store.set("gist", auth))
+      return inquirer.prompt(questions).then((auth) => store.set('gist', auth))
     })
 }
 
 const defineGist = async (gist) => {
-  const { gistId } = store.get("gist")
+  const { gistId } = store.get('gist')
 
   if (gistId) return gistId
 
@@ -81,9 +81,9 @@ const defineGist = async (gist) => {
   return inquirer
     .prompt([
       {
-        type: "list",
-        name: "id",
-        message: "Choose a git to synch your shortcuts with ?",
+        type: 'list',
+        name: 'id',
+        message: 'Choose a git to synch your shortcuts with ?',
         choices: [NEW_GIST, ...files],
       },
     ])
@@ -93,13 +93,13 @@ const defineGist = async (gist) => {
       if (!gistId) {
         try {
           const [newGist] = await gist.createAsync({
-            description: "Toolkit shortcut backup",
+            description: 'Toolkit shortcut backup',
             files: {
               [GIST_NAME]: {
-                content: "Toolkit Backup files",
+                content: 'Toolkit Backup files',
               },
               [SHORTCUTS_FILE]: {
-                content: "[]",
+                content: '[]',
               },
             },
           })
@@ -111,8 +111,8 @@ const defineGist = async (gist) => {
         }
       }
 
-      store.set("gist", {
-        ...store.get("gist"),
+      store.set('gist', {
+        ...store.get('gist'),
         gistId,
       })
 
@@ -122,15 +122,15 @@ const defineGist = async (gist) => {
 
 const getGists = async () => {
   await authenticate()
-  const { token, ...credentials } = store.get("gist")
+  const { token, ...credentials } = store.get('gist')
   const client = github.client(token || credentials)
 
   try {
-    const [, user] = await client.getAsync("/user", {})
+    const [, user] = await client.getAsync('/user', {})
     return { user, client }
   } catch (error) {
-    console.log("🤷‍♂️ Error while authenticating... Try again !")
-    store.set("gist", {})
+    console.log('🤷‍♂️ Error while authenticating... Try again !')
+    store.set('gist', {})
     return getGists()
   }
 }
@@ -143,9 +143,9 @@ const sync = async () => {
   inquirer
     .prompt([
       {
-        type: "list",
-        name: "action",
-        message: "What action to you want to do ?",
+        type: 'list',
+        name: 'action',
+        message: 'What action to you want to do ?',
         choices: [
           ACTION_TYPES.upload,
           ACTION_TYPES.download,
@@ -159,11 +159,11 @@ const sync = async () => {
           const pluginsList = await glob.sync(`${PLUGINS_FOLDER}/*`)
           const plugins = await Promise.all(
             pluginsList.map(async (pluginPath) => {
-              const fragments = pluginPath.split("/")
+              const fragments = pluginPath.split('/')
               const name = fragments[fragments.length - 1]
               const content = await fs.readFile(
                 path.join(PLUGINS_FOLDER, name),
-                "utf8",
+                'utf8',
               )
 
               return { name, content }
@@ -179,21 +179,21 @@ const sync = async () => {
           await gist.editAsync(gistId, {
             files: {
               [SHORTCUTS_FILE]: {
-                content: JSON.stringify(store.get("shortcuts"), null, 2),
+                content: JSON.stringify(store.get('shortcuts'), null, 2),
               },
               ...gistPlugings,
             },
           })
-          console.log("Your shortcuts and plugins have been saved ✨")
+          console.log('Your shortcuts and plugins have been saved ✨')
         } catch (error) {
-          console.log("🤷‍♂️ An error happended !", error)
+          console.log('🤷‍♂️ An error happended !', error)
         }
         return
       }
 
       if (action === ACTION_TYPES.change_gist) {
-        store.set("gist", {
-          ...store.get("gist"),
+        store.set('gist', {
+          ...store.get('gist'),
           gistId: null,
         })
 
@@ -231,8 +231,8 @@ const sync = async () => {
         if (!shortcuts.length) {
           console.log(`🤷‍♂️ No shortcuts to import`)
         } else {
-          store.set("shortcuts", shortcuts)
-          console.log("You shortcuts have been restored ✨")
+          store.set('shortcuts', shortcuts)
+          console.log('You shortcuts have been restored ✨')
         }
 
         console.log(`⏳ Restoring plugins`)
@@ -247,7 +247,7 @@ const sync = async () => {
               pluginsFiles.map(async ({ name, content }) => {
                 const pluginPath = path.join(PLUGINS_FOLDER, name)
                 await fs.writeFile(pluginPath, content)
-                await fs.chmod(pluginPath, "755")
+                await fs.chmod(pluginPath, '755')
               }),
             )
           } catch (error) {

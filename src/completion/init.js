@@ -1,11 +1,11 @@
-const omelette = require("omelette")
-const glob = require("glob")
+const omelette = require('omelette')
+const glob = require('glob')
 
-const commands = require("../utils/getShortcuts")
-const { PLUGINS } = require("../commands/constants")
+const commands = require('../utils/getShortcuts')
+const { PLUGINS } = require('../commands/constants')
 
 const completionTree = Object.keys(commands).reduce((acc, key) => {
-  if (key !== "plugins") {
+  if (key !== 'plugins') {
     return { ...acc, [key]: true }
   }
 
@@ -16,7 +16,7 @@ const completionTree = Object.keys(commands).reduce((acc, key) => {
 }, {})
 
 module.exports = () => {
-  const compl = omelette("toolkit|tk <command>")
+  const compl = omelette('toolkit|tk <command>')
 
   compl.tree(completionTree).init()
 

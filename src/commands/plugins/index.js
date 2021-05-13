@@ -1,16 +1,16 @@
-const path = require("path")
+const path = require('path')
 
-const runCommand = require("../../utils/runCommand")
+const runCommand = require('../../utils/runCommand')
 
-const { PLUGINS_FOLDER, PLUGINS } = require("../constants")
+const { PLUGINS_FOLDER, PLUGINS } = require('../constants')
 
-const add = require("./add")
+const add = require('./add')
 
 const plugins = (args) => {
   const [name, ...extraArgs] = args
 
   switch (name) {
-    case "add":
+    case 'add':
       add(extraArgs)
       break
 

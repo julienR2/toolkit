@@ -1,16 +1,16 @@
-const Configstore = require("configstore");
+const Configstore = require('configstore')
 
-const packageJson = require("../package.json");
+const packageJson = require('../package.json')
 
-const defaultShortcuts = require("./defaultShortcuts");
+const defaultShortcuts = require('./defaultShortcuts')
 
 const defaultStore = {
   shortcuts: defaultShortcuts,
   gist: {
-    token: "",
-    username: "",
-    password: "",
+    token: '',
+    username: '',
+    password: '',
   },
-};
+}
 
-module.exports = new Configstore(packageJson.name, defaultStore);
+module.exports = new Configstore(packageJson.name, defaultStore)

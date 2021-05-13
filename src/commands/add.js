@@ -13,7 +13,7 @@ const add = (args, shortcuts) => {
       type: 'input',
       name: 'name',
       message: 'Name',
-      validate: name =>
+      validate: (name) =>
         !shortcuts[name.toLowerCase()]
           ? true
           : 'This shortcut name already exists !',
@@ -27,7 +27,7 @@ const add = (args, shortcuts) => {
     },
   ]
 
-  inquirer.prompt(questions).then(answers => {
+  inquirer.prompt(questions).then((answers) => {
     const shortcuts = store.get('shortcuts')
 
     store.set('shortcuts', [...shortcuts, { ...answers, count: 0 }])
