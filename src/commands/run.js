@@ -4,7 +4,7 @@ const runCommand = require('../utils/runCommand')
 const shortcutsAutocomplete = require('../utils/shortcutsAutocomplete')
 const store = require('../store')
 
-const run = (args) =>
+const run = ({ params }) =>
   shortcutsAutocomplete(
     `Which shortcut do you want to ${chalk.underline.blue('RUN')}`,
     (rawCommand) => {
@@ -22,7 +22,7 @@ const run = (args) =>
 
       store.set('shortcuts', newShortcuts)
 
-      return runCommand(rawCommand, args)
+      return runCommand(rawCommand, params)
     },
   )
 

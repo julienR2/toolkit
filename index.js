@@ -1,23 +1,16 @@
 #!/usr/bin/env node
 
-const parseArgs = require('minimist')
+const chalk = require('chalk')
 const shortcuts = require('./src/utils/getShortcuts')
 const completion = require('./src/completion/init')
-
-const variablesRegex = /<(?<var>(?<key>[\s\S]*?)=(?<value>[\s\S]*?))>/gm
+const parseArgs = require('./src/utils/parseArgs')
 
 completion()
 
-let {
-  _: [shortcut = 'run', ...args],
-} = parseArgs(process.argv.slice(2), { stopEarly: true })
-
-shortcut = shortcut.toLowerCase()
+const { shortcut, params, variables } = parseArgs()
 
 if (shortcuts[shortcut]) {
-  console.log('args', args)
-
-  shortcuts[shortcut](args, shortcuts)
+  shortcuts[shortcut]({ params, variables, shortcuts })
 } else {
-  console.log('No shortcut found')
+  console.log(chalk.magenta('No shortcut found...'))
 }

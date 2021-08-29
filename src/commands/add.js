@@ -2,7 +2,7 @@ const inquirer = require('inquirer')
 
 const store = require('../store')
 
-const add = (args, shortcuts) => {
+const add = ({ shortcuts }) => {
   const questions = [
     {
       type: 'input',
