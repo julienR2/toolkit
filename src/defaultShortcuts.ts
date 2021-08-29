@@ -1,4 +1,6 @@
-module.exports = [
+import { Shortcuts } from './types'
+
+const defaultShortcuts = [
   {
     name: 'Test',
     command: 'echo "Hello World"',
@@ -11,4 +13,6 @@ module.exports = [
     description: '',
     count: 0,
   },
-]
+] as Shortcuts
+
+export default defaultShortcuts

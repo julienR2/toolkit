@@ -1,7 +1,7 @@
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs'
+import path from 'path'
 
-const initCompletion = require('./init')
+import initCompletion from './init'
 
 const completion = initCompletion()
 const programFolder = path.join(completion.HOME, `.${completion.program}`)
@@ -29,4 +29,4 @@ console.log(
   `✨ Completion setup ! Now restart your terminal or run 'source ${initFile}'`,
 )
 
-return process.exit()
+process.exit()

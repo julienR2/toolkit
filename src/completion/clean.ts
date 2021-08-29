@@ -1,9 +1,9 @@
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs'
+import path from 'path'
 
-const getCompletion = require('./init')
+import getCompletion from './init'
 
-removeSubstring = function (haystack, needle) {
+const removeSubstring = function (haystack: string, needle: string) {
   return haystack.replace(
     new RegExp(
       needle.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&'),
@@ -41,4 +41,4 @@ if (
 
 console.log(`✨ Completion cleaned ! Restart your terminal to finish`)
 
-return process.exit()
+process.exit()

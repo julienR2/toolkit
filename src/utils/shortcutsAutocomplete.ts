@@ -1,15 +1,19 @@
-const inquirer = require('inquirer')
-const inquirerAutocomplete = require('inquirer-autocomplete-prompt')
-const chalk = require('chalk')
-const fuzzy = require('fuzzy')
-const orderBy = require('lodash/orderBy')
+import inquirer from 'inquirer'
+import inquirerAutocomplete from 'inquirer-autocomplete-prompt'
+import chalk from 'chalk'
+import fuzzy from 'fuzzy'
+import orderBy from 'lodash/orderBy'
 
-const store = require('../store')
+import store from '../store'
+import { Shortcut } from '../types'
 
-module.exports = (message, onAnswer) => {
+const shortcutsAutocomplete = (
+  message: string,
+  onAnswer: (command: string) => void,
+) => {
   inquirer.registerPrompt('autocomplete', inquirerAutocomplete)
 
-  const getsearchString = ({ name, command, description }) =>
+  const getsearchString = ({ name, command, description }: Shortcut) =>
     `${name} | ${
       description ? chalk.italic(description) + ' | ' : ''
     }${chalk.dim(command)}`
@@ -18,12 +22,12 @@ module.exports = (message, onAnswer) => {
     extract: getsearchString,
   }
 
-  getDisplayResult =
-    (nameLength, descriptionLength) =>
+  const getDisplayResult =
+    (nameLength: number, descriptionLength: number) =>
     ({
-      original: { name = '', description = '', command, ...result },
+      original: { name = '', description = '', command = '', ...result },
       score,
-    }) => {
+    }: fuzzy.FilterResult<Shortcut>) => {
       const parsedName = name.padEnd(nameLength)
       const parsedDescription = chalk.italic(
         description.padEnd(descriptionLength),
@@ -49,7 +53,7 @@ module.exports = (message, onAnswer) => {
       }
     }
 
-  const formatResults = (results) => {
+  const formatResults = (results: fuzzy.FilterResult<Shortcut>[]) => {
     const { nameLength, descriptionLength } = results.reduce(
       (acc, { original: { name = '', description = '' } }) => ({
         nameLength: Math.max(acc.nameLength, name.length),
@@ -81,8 +85,10 @@ module.exports = (message, onAnswer) => {
         type: 'autocomplete',
         name: 'rawCommand',
         message,
-        source: (_, input) => fuzzySearch(input),
+        source: (_: any, input: string) => fuzzySearch(input),
       },
     ])
     .then(({ rawCommand }) => onAnswer(rawCommand))
 }
+
+export default shortcutsAutocomplete

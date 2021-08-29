@@ -1,13 +1,14 @@
-const chalk = require('chalk')
+import chalk from 'chalk'
 
-const shortcutsAutocomplete = require('../utils/shortcutsAutocomplete')
-const store = require('../store')
+import shortcutsAutocomplete from '../utils/shortcutsAutocomplete'
+import store from '../store'
+import { Store } from '../types'
 
 const remove = () =>
   shortcutsAutocomplete(
     `Which shortcut do you want to ${chalk.underline.red('REMOVE')}`,
     (rawCommand) => {
-      const shortcuts = store.get('shortcuts')
+      const shortcuts = store.get('shortcuts') as Store['shortcuts']
       const newShortcuts = shortcuts.filter(
         (shortcut) => shortcut.command !== rawCommand,
       )
@@ -16,4 +17,4 @@ const remove = () =>
     },
   )
 
-module.exports = remove
+export default remove

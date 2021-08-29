@@ -1,10 +1,15 @@
-const { spawn } = require('child_process')
-const chalk = require('chalk')
+import { spawn } from 'child_process'
+import chalk from 'chalk'
+
+import { CommandProps } from '../types'
 
 const variablesRegex = /<(?<var>(?<key>[\s\S]*?)(=(?<value>[\s\S]*?))?)>/gm
 
-module.exports = (rawCommand, { params, variables }) => {
-  let missingVariables = []
+const runCommand = (
+  rawCommand: string,
+  { params, variables }: CommandProps,
+) => {
+  let missingVariables = [] as string[]
 
   const command = rawCommand.replace(
     variablesRegex,
@@ -32,3 +37,5 @@ module.exports = (rawCommand, { params, variables }) => {
 
   spawn(command, params, { stdio: 'inherit', shell: true })
 }
+
+export default runCommand

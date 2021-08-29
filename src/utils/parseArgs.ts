@@ -1,4 +1,6 @@
-const minimist = require('minimist')
+import minimist from 'minimist'
+
+import { CommandProps } from '../types'
 
 const parseArgs = () => {
   const {
@@ -10,9 +12,9 @@ const parseArgs = () => {
     const [key, value] = variable.split('=')
 
     return { ...acc, [key]: value }
-  }, {})
+  }, {}) as CommandProps['variables']
 
   return { shortcut: shortcut.toLowerCase(), params, variables }
 }
 
-module.exports = parseArgs
+export default parseArgs

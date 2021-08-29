@@ -1,8 +1,9 @@
-const inquirer = require('inquirer')
+import inquirer from 'inquirer'
 
-const store = require('../store')
+import shortcuts from '../utils/getShortcuts'
+import store from '../store'
 
-const add = ({ shortcuts }) => {
+const add = () => {
   const questions = [
     {
       type: 'input',
@@ -13,17 +14,17 @@ const add = ({ shortcuts }) => {
       type: 'input',
       name: 'name',
       message: 'Name',
-      validate: (name) =>
+      validate: (name: string) =>
         !shortcuts[name.toLowerCase()]
           ? true
           : 'This shortcut name already exists !',
-      default: ({ command }) => command.split(' ')[0],
+      default: ({ command }: { command: string }) => command.split(' ')[0],
     },
     {
       type: 'input',
       name: 'description',
       message: 'Description',
-      default: ({ name }) => `Run ${name}`,
+      default: ({ name }: { name: string }) => `Run ${name}`,
     },
   ]
 
@@ -34,4 +35,4 @@ const add = ({ shortcuts }) => {
   })
 }
 
-module.exports = add
+export default add

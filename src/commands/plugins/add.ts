@@ -1,10 +1,11 @@
-const fs = require('fs')
-const path = require('path')
-const inquirer = require('inquirer')
+import fs from 'fs'
+import path from 'path'
+import inquirer from 'inquirer'
 
-const runCommand = require('../../utils/runCommand')
+import runCommand from '../../utils/runCommand'
 
-const { PLUGINS_FOLDER } = require('../constants')
+import { PLUGINS_FOLDER } from '../constants'
+import { CommandProps } from '../../types'
 
 const fileShebangMapping = {
   js: '#!/usr/bin/env node',
@@ -12,19 +13,30 @@ const fileShebangMapping = {
   custom: '',
 }
 
-const createPlugin = ({ fileName, shebang }) => {
+const createPlugin = ({
+  fileName,
+  shebang,
+}: {
+  fileName: string
+  shebang: string
+}) => {
   const pluginPath = path.join(PLUGINS_FOLDER, fileName)
 
   fs.writeFileSync(pluginPath, shebang + '\n')
   fs.chmodSync(pluginPath, '755')
   console.log(`✨ Your plugin has been created !\nOpening ${pluginPath}`)
 
-  return runCommand('open', [pluginPath])
+  return runCommand('open', {
+    params: [pluginPath],
+    variables: {},
+  })
 }
 
-const getShebang = (fileName) => {
+const getShebang = (fileName: string) => {
   const fragments = fileName.split('.')
-  const extension = fragments[fragments.length - 1]
+  const extension = fragments[
+    fragments.length - 1
+  ] as keyof typeof fileShebangMapping
   const shebang = fileShebangMapping[extension]
 
   return inquirer
@@ -42,7 +54,7 @@ const getShebang = (fileName) => {
     }))
 }
 
-const add = (args) =>
+const add = (props: CommandProps) => {
   inquirer
     .prompt([
       {
@@ -73,15 +85,16 @@ const add = (args) =>
         ])
         .then(({ choice }) => {
           if (choice === 'change') {
-            return add(args)
+            return add(props)
           }
 
           console.log(`Opening ${pluginPath}`)
-          runCommand('open', [pluginPath])
+          runCommand('open', props)
           return process.exit()
         })
     })
     .then(getShebang)
     .then(createPlugin)
+}
 
-module.exports = add
+export default add

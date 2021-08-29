@@ -1,12 +1,14 @@
-const fs = require('fs').promises
-const { existsSync } = require('fs')
-const path = require('path')
-const inquirer = require('inquirer')
-const github = require('octonode')
-const glob = require('glob')
+import { promises as fs } from 'fs'
+import { existsSync } from 'fs'
+import path from 'path'
+import inquirer from 'inquirer'
+import github, { GistClient } from 'octonode'
+import glob from 'glob'
 
-const store = require('../store')
-const { PLUGINS_FOLDER } = require('./constants')
+import store from '../store'
+import { PLUGINS_FOLDER } from './constants'
+import chalk from 'chalk'
+import { Store } from '../types'
 
 const AUTH_TYPES = {
   credential: '👤 Username/Password',
@@ -25,7 +27,7 @@ const GIST_NAME = '@toolkit_backup'
 const SHORTCUTS_FILE = 'shortcuts.json'
 
 const authenticate = async () => {
-  const { token, username } = store.get('gist')
+  const { token, username } = store.get('gist') as Store['gist']
 
   if (token || username) return Promise.resolve()
 
@@ -66,8 +68,8 @@ const authenticate = async () => {
     })
 }
 
-const defineGist = async (gist) => {
-  const { gistId } = store.get('gist')
+const defineGist = async (gist: GistClient) => {
+  const { gistId } = store.get('gist') as Store['gist']
 
   if (gistId) return gistId
 
@@ -122,21 +124,32 @@ const defineGist = async (gist) => {
 
 const getGists = async () => {
   await authenticate()
-  const { token, ...credentials } = store.get('gist')
+
+  const { token, ...credentials } = store.get('gist') as Store['gist']
   const client = github.client(token || credentials)
 
   try {
-    const [, user] = await client.getAsync('/user', {})
-    return { user, client }
+    const [status] = await client.getAsync('/user', {})
+
+    if (status !== 200) {
+      throw new Error('Error authenticating')
+    }
+
+    return client
   } catch (error) {
     console.log('🤷‍♂️ Error while authenticating... Try again !')
+
     store.set('gist', {})
-    return getGists()
+
+    getGists()
   }
 }
 
 const sync = async () => {
-  const { user, client } = await getGists()
+  const client = await getGists()
+
+  if (!client) return
+
   const gist = client.gist()
   const gistId = await defineGist(gist)
 
@@ -184,6 +197,7 @@ const sync = async () => {
               ...gistPlugings,
             },
           })
+
           console.log('Your shortcuts and plugins have been saved ✨')
         } catch (error) {
           console.log('🤷‍♂️ An error happended !', error)
@@ -258,9 +272,9 @@ const sync = async () => {
           console.log(`🤷‍♂️ No plugins to import`)
         }
 
-        console.log(`✨ All done !`)
+        console.log(chalk.green('✨ All done !'))
       }
     })
 }
 
-module.exports = sync
+export default sync
