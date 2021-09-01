@@ -1,14 +1,21 @@
-import { spawn } from 'child_process'
+import { spawnSync, SpawnOptions } from 'child_process'
 import chalk from 'chalk'
 
 import { CommandProps } from '../types'
 
 const variablesRegex = /<(?<var>(?<key>[\s\S]*?)(=(?<value>[\s\S]*?))?)>/gm
 
+type runCommandOptions = SpawnOptions & {
+  silent?: boolean
+}
+
 const runCommand = (
   rawCommand: string,
-  { params, variables }: CommandProps,
+  props: CommandProps = {},
+  { silent, ...options }: runCommandOptions = {},
 ) => {
+  const params = props.params || []
+  const variables = props.variables || {}
   let missingVariables = [] as string[]
 
   const command = rawCommand.replace(
@@ -23,7 +30,7 @@ const runCommand = (
     },
   )
 
-  if (missingVariables.length) {
+  if (missingVariables.length && !silent) {
     console.log(
       chalk.magenta(
         `Some variables are missing and have been ignored: ${missingVariables.join(
@@ -33,9 +40,15 @@ const runCommand = (
     )
   }
 
-  console.log(chalk.green(`> ${command}`))
+  if (!silent) {
+    console.log(chalk.green(`> ${command}`))
+  }
 
-  spawn(command, params, { stdio: 'inherit', shell: true })
+  return spawnSync(command, params, {
+    stdio: 'inherit',
+    shell: true,
+    ...options,
+  })
 }
 
 export default runCommand

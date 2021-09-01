@@ -11,10 +11,7 @@ completion()
 const { shortcut, params, variables } = parseArgs()
 
 if (shortcuts.hasOwnProperty(shortcut)) {
-  shortcuts[shortcut as keyof typeof shortcuts]({
-    params: params || [],
-    variables,
-  })
+  shortcuts[shortcut as keyof typeof shortcuts]({ params, variables })
 } else {
   console.log(chalk.magenta('No shortcut found...'))
 }

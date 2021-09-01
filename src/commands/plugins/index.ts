@@ -9,7 +9,7 @@ import { PLUGINS_FOLDER, PLUGINS } from '../constants'
 import add from './add'
 
 const plugins = (props: CommandProps) => {
-  const [name] = props.params
+  const [name] = props.params || []
 
   switch (name) {
     case 'add':

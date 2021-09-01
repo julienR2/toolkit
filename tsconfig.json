@@ -23,10 +23,9 @@
     "include": [
       "types/*",
       "**/*.ts",
-      "**/*.tsx"
     ],
     "exclude": [
       "node_modules",
-      ".dist"
+      "**/__tests__",
     ]
 }  

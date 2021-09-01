@@ -10,8 +10,8 @@ export type Shortcut = {
 export type Shortcuts = Shortcut[]
 
 export type CommandProps = {
-  variables: { [key: string]: string }
-  params: string[]
+  variables?: { [key: string]: string }
+  params?: string[]
 }
 export type CommandFn = (props?: CommandProps) => void
 export type CommandsFn = { [key: string]: (props: CommandProps) => void }
