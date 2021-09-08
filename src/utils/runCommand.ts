@@ -41,7 +41,7 @@ const runCommand = (
   }
 
   if (!silent) {
-    console.log(chalk.green(`> ${command}`))
+    console.log(chalk.green(`> ${command} ${params.join(' ')}`))
   }
 
   return spawnSync(command, params, {
