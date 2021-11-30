@@ -3,6 +3,7 @@ import run from './run'
 import remove from './remove'
 import edit from './edit'
 import sync from './sync'
+import version from './version'
 import plugins from './plugins'
 
 const commands = {
@@ -12,6 +13,7 @@ const commands = {
   remove,
   edit,
   sync,
+  version,
   plugins,
 }
 
