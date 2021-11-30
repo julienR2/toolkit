@@ -1,6 +1,6 @@
 # Toolkit
 
-A simple command line tool to create shortcut to you most common commands!
+A command line tool to quickly create and execute shortcuts to your most common commands!
 
 ## Demo
   
