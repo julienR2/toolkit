@@ -1,6 +1,6 @@
-import { Shortcuts } from './types'
+import { StoredShortcuts } from './types'
 
-const defaultShortcuts = [
+const defaultShortcuts: StoredShortcuts = [
   {
     name: 'Test',
     command: 'echo "Hello World"',
@@ -13,6 +13,6 @@ const defaultShortcuts = [
     description: '',
     count: 0,
   },
-] as Shortcuts
+]
 
 export default defaultShortcuts

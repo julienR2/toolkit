@@ -4,6 +4,7 @@ import remove from './remove'
 import edit from './edit'
 import sync from './sync'
 import version from './version'
+import completion from './completion'
 import plugins from './plugins'
 
 const commands = {
@@ -15,6 +16,7 @@ const commands = {
   sync,
   version,
   plugins,
+  completion,
 }
 
 export default commands

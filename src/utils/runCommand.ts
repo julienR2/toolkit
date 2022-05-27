@@ -3,7 +3,8 @@ import chalk from 'chalk'
 
 import { CommandProps } from '../types'
 
-const variablesRegex = /<(?<var>(?<key>[\s\S]*?)(=(?<value>[\s\S]*?))?)>/gm
+export const variablesRegex =
+  /<(?<var>(?<key>[\s\S]*?)(=(?<value>[\s\S]*?))?)>/gm
 
 type runCommandOptions = SpawnOptions & {
   silent?: boolean
@@ -26,7 +27,7 @@ const runCommand = (
         return ''
       }
 
-      return variables[key] ? `"${variables[key]}"` : value
+      return variables[key] ? `${variables[key]}` : value
     },
   )
 

@@ -1,5 +1,3 @@
-import { Instance } from 'omelette'
-
 export type Shortcut = {
   name: string
   command: string
@@ -7,7 +5,11 @@ export type Shortcut = {
   count?: number
 }
 
-export type Shortcuts = Shortcut[]
+export type StoredShortcuts = Shortcut[]
+
+export type Shortcuts = {
+  [key: string]: Shortcut
+}
 
 export type CommandProps = {
   variables?: { [key: string]: string }
@@ -24,12 +26,4 @@ export type Store = {
     username: string
     password: string
   }
-}
-
-export interface OmeletteInstance extends Instance {
-  HOME: string
-  program: string
-  getDefaultShellInitFile: () => string
-  generateCompletionCode: () => string
-  getCompletionBlock: () => string
 }

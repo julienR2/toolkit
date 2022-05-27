@@ -1,6 +1,6 @@
 import inquirer from 'inquirer'
 
-import shortcuts from '../utils/getShortcuts'
+import { shortcuts } from '../utils/getShortcuts'
 import store from '../store'
 
 const add = () => {
@@ -29,9 +29,9 @@ const add = () => {
   ]
 
   inquirer.prompt(questions).then((answers) => {
-    const shortcuts = store.get('shortcuts')
+    const previousShortcuts = store.get('shortcuts')
 
-    store.set('shortcuts', [...shortcuts, { ...answers, count: 0 }])
+    store.set('shortcuts', [...previousShortcuts, { ...answers, count: 0 }])
   })
 }
 

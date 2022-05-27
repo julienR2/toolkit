@@ -2,16 +2,16 @@
 
 import chalk from 'chalk'
 
-import shortcuts from './src/utils/getShortcuts'
-import completion from './src/completion/init'
+import { commands } from './src/utils/getShortcuts'
 import parseArgs from './src/utils/parseArgs'
-
-completion()
+import initCompletion from './src/utils/initCompletion'
 
 const { shortcut, params, variables } = parseArgs()
 
-if (shortcuts.hasOwnProperty(shortcut)) {
-  shortcuts[shortcut as keyof typeof shortcuts]({ params, variables })
+initCompletion()
+
+if (commands.hasOwnProperty(shortcut)) {
+  commands[shortcut]({ params, variables })
 } else {
   console.log(chalk.magenta('No shortcut found...'))
 }
