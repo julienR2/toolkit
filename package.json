@@ -1,7 +1,7 @@
 {
   "name": "@julienr2/toolkit",
-  "version": "1.3.13",
-  "main": "index.js",
+  "version": "1.3.14",
+  "main": "lib/index.js",
   "license": "MIT",
   "scripts": {
     "ts-node": "ts-node --files",
@@ -12,8 +12,8 @@
     "prepare": "yarn tsc && yarn test && yarn version --patch && yarn build"
   },
   "bin": {
-    "tk": "./index.js",
-    "toolkit": "./index.js"
+    "tk": "./lib/index.js",
+    "toolkit": "./lib/index.js"
   },
   "files": [
     "lib"
