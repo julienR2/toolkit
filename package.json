@@ -1,6 +1,6 @@
 {
   "name": "@julienr2/toolkit",
-  "version": "1.3.10",
+  "version": "1.3.11",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -10,7 +10,7 @@
     "dev": "tsc -w",
     "build": "rm -rf lib && tsc",
     "prerelease": "yarn tsc && yarn test && yarn version --patch && yarn build",
-    "release": "printf '\n' | yarn publish lib --no-git-tag-version"
+    "release": "npm publish"
   },
   "bin": {
     "tk": "./index.js",
