@@ -1,12 +1,14 @@
-import { CommandProps } from '../../types'
-
 import path from 'path'
 
+import { CommandProps } from '../../types'
 import runCommand from '../../utils/runCommand'
 
 import { PLUGINS_FOLDER, PLUGINS } from '../constants'
 
 import add from './add'
+import open from './open'
+
+export const pluginCommands = { add, open }
 
 const plugins = (props: CommandProps) => {
   const [name] = props.params || []
@@ -14,6 +16,10 @@ const plugins = (props: CommandProps) => {
   switch (name) {
     case 'add':
       add(props)
+      break
+
+    case 'open':
+      open()
       break
 
     default:

@@ -2,6 +2,7 @@ import omelette from 'omelette'
 
 import { PLUGINS } from '../commands/constants'
 import cliCommands from '../commands'
+import { pluginCommands } from '../commands/plugins'
 
 import { storedShortcuts, shortcuts } from './getShortcuts'
 import { variablesRegex } from './runCommand'
@@ -24,11 +25,13 @@ const initCompletion = () => {
         ...storedShortcuts.map(({ name }) => name),
       ]}
       ${({ before }) => {
-        const params = getShortcutParams(before)
+        if (before === 'plugins') {
+          return [...Object.keys(pluginCommands), ...PLUGINS]
+        }
 
-        if (!params?.length) return
-
-        return ['--']
+        if (getShortcutParams(before)) {
+          return ['--']
+        }
       }}
       ${({ line }) => {
         if (!line.includes('--')) return
